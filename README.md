@@ -6,6 +6,8 @@ Your players have a quest log now. It lives in a button above the player list, i
 
 Victory Quest Tracker is a shared quest log for Foundry VTT. Every quest has a name, a type (Story, Interlude, or Objective), a note players see on hover, and one of five statuses: Aware, Rumors, Hearsay, Completed, and Failed. The first three get a tab each. Completed and Failed share one, because a failed quest is still a finished quest. It just finished badly.
 
+<p align="center"><img alt="The Completed tab, a hover note showing" src="docs/completed-tab.png" width="420"></p>
+
 It started life as a 36 KB script glued to a book item in my PF1e game. Every player carried their own copy of the code inside their inventory, and every fix meant thirteen copies. Why a module? Because I got tired of counting to thirteen.
 
 ## Install
