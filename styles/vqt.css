@@ -1,0 +1,52 @@
+/* Quest Log button, matches the player list. */
+#players .vqt-open { display: block; width: 100%; height: 26px; margin: 0 0 4px; padding: 0 8px; line-height: 1; white-space: nowrap; background: rgba(60, 60, 60, 0.6); border: 1px solid #191813; border-radius: 3px; color: #f0f0e0; font-family: 'Signika', sans-serif; font-size: 13.5px; cursor: pointer; }
+#players .vqt-open:hover { background: rgba(90, 90, 90, 0.6); box-shadow: 0 0 5px #ff6400; }
+
+/* Window: dark, header, tabs, scrolling list */
+#vqt-app .window-content { display: flex; flex-direction: column; padding: 0; overflow: hidden; background: #1a1a1a; color: #e0e0e0; font-family: 'Signika', sans-serif; font-size: 14px; }
+#vqt-app .head { flex: 0 0 auto; display: flex; align-items: center; gap: 10px; padding: 8px 12px 6px; }
+#vqt-app .head label { display: flex; align-items: center; gap: 4px; font-size: 0.8em; font-weight: bold; color: #ffcc33; white-space: nowrap; cursor: pointer; }
+#vqt-app .head input[type=checkbox] { width: 13px; height: 13px; margin: 0; accent-color: #ffcc33; }
+#vqt-app .head .tools { margin-left: auto; }
+#vqt-app .qhelp { flex-shrink: 0; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border: 2px solid #ffcc33; border-radius: 50%; background: rgba(255,204,51,0.2); color: #ffcc33; font-size: 0.85em; font-weight: bold; cursor: help; }
+#vqt-app .qhelp:hover { background: rgba(255,204,51,0.4); }
+#tooltip .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; vertical-align: middle; }
+#tooltip .dot.star { width: auto; height: auto; border-radius: 0; }
+#vqt-app .qtabs { flex: 0 0 auto; display: flex; background: #141414; border-bottom: 2px solid #444; }
+#vqt-app .qtab { flex: 1; padding: 8px 4px; text-align: center; font-size: 0.78em; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; color: #888; border-bottom: 3px solid transparent; cursor: pointer; user-select: none; }
+#vqt-app .qtab:hover { color: #ccc; }
+#vqt-app .list { flex: 1 1 auto; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding: 10px 12px; }
+#vqt-app .list::-webkit-scrollbar { width: 8px; }
+#vqt-app .list::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); border-radius: 4px; }
+#vqt-app .list::-webkit-scrollbar-thumb { background: rgba(255,204,51,0.4); border-radius: 4px; }
+#vqt-app .empty { padding: 30px 20px; text-align: center; color: #666; font-style: italic; font-size: 0.9em; line-height: 1.6; }
+
+/* Cards */
+#vqt-app .card { flex: 0 0 auto; background: #2a2a2a; border-left: 4px solid #444; border-radius: 4px; padding: 10px 12px; }
+#vqt-app .card.noted { cursor: help; }
+#vqt-app .row { display: flex; align-items: center; gap: 6px; }
+#vqt-app .dot { flex-shrink: 0; display: inline-block; width: 12px; height: 12px; border-radius: 50%; }
+#vqt-app .dot.star { width: auto; height: auto; border-radius: 0; line-height: 1; }
+#vqt-app .type { font-size: 0.72em; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
+#vqt-app .name { margin-top: 5px; padding-left: 18px; font-size: 0.92em; line-height: 1.35; }
+
+/* GM tools, scoped below header for close X. */
+#vqt-app .window-content button { width: auto; line-height: 1; font-family: inherit; }
+#vqt-app .window-content button.ic { width: 24px; height: 24px; padding: 0; background: transparent; border: 1px solid #444; border-radius: 4px; color: #aaa; cursor: pointer; }
+#vqt-app .window-content button.ic:hover, #vqt-app .window-content button.ic.on { color: #ffcc33; border-color: #ffcc33; }
+#vqt-app .tools { margin-left: auto; display: flex; align-items: center; gap: 4px; }
+#vqt-app .pick { width: 14px; height: 14px; padding: 0; border: 2px solid transparent; border-radius: 50%; opacity: 0.5; cursor: pointer; }
+#vqt-app .pick:hover { opacity: 1; }
+#vqt-app .pick.cur { opacity: 1; border-color: #fff; }
+#vqt-app .ask { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin-top: 8px; padding-top: 6px; border-top: 1px dashed #444; font-size: 0.8em; color: #ccc; }
+#vqt-app .ask button, #vqt-app .card.edit .row button { height: 24px; padding: 0 8px; font-size: 0.85em; border-radius: 4px; }
+#vqt-app button.gold { background: #ffcc33; border-color: #ffcc33; color: #1a1a1a; }
+#vqt-app button.red { background: #5a2222; border-color: #ff6666; color: #ffbbbb; }
+#vqt-app button.add { flex: 0 0 auto; width: 100%; height: 28px; background: linear-gradient(135deg, #ffcc33 0%, #ff9933 100%); border: none; border-radius: 4px; color: #1a1a1a; font-weight: bold; cursor: pointer; }
+
+/* Editor card */
+#vqt-app .card.edit { display: flex; flex-direction: column; gap: 6px; }
+#vqt-app .card.edit input, #vqt-app .card.edit textarea, #vqt-app .card.edit select { width: 100%; box-sizing: border-box; padding: 6px 8px; background: #1f1f1f; border: 1px solid #444; border-radius: 4px; color: #e0e0e0; font-family: inherit; font-size: 0.9em; }
+#vqt-app .card.edit input:focus, #vqt-app .card.edit textarea:focus { outline: none; border-color: #ffcc33; }
+#vqt-app .card.edit textarea { min-height: 56px; resize: vertical; }
+#vqt-app .card.edit select option { background: #2a2a2a; color: #e0e0e0; }
