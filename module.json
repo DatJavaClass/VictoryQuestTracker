@@ -2,7 +2,7 @@
   "id": "victory-quest-tracker",
   "title": "Victory Quest Tracker",
   "description": "A shared quest log for the whole table: one button above the player list, five statuses, hover notes, and inline GM editing with a confirm before anything is finished.",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "authors": [
     {
       "name": "Victor S. (DatJavaClass)"

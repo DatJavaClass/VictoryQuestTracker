@@ -1,3 +1,5 @@
+DatJavaClass here, I am terrible at writing readme files, great at talking people through things, bad a putting pen to paper or finger to keyboard on how to. So yes, I did have an LLM write this readme. So it could be coherent. So it could be understood. So you could just maybe get an idea of what I build here. IF the fact that a readme is coherent offends you? I am sorry. If not, I hope what I made is useful and I genuinely hope it helps you have fun in your game. Roll on my friends, Roll on.
+
 # Victory Quest Tracker
 
 Your players have a quest log now. It lives in a button above the player list, it says Quest Log, and it opens the same window for everyone at the table. The GM's copy has a quill in the corner. That's the whole trick.
