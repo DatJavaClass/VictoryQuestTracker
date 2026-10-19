@@ -23,20 +23,20 @@ export class QuestTrackerApp extends ApplicationV2 {
   }
 
   async _renderHTML() { return this.html(); }
-  _replaceHTML(html, content) { const top = content.querySelector('[data-keep]')?.scrollTop ?? 0; content.innerHTML = html; const el = content.querySelector('[data-keep]'); if (el) el.scrollTop = top; }
+  _replaceHTML(html, content) { const top = content.querySelector('[data-keep]')?.scrollTop ?? 0; content.innerHTML = html; const el = content.querySelector('[data-keep]'); if (el) el.scrollTop = top; } /* in: list el, out: scroll restored */
   _onFirstRender() { this.bind(this.element); } /* frame persists, content swaps */
 
   visible() {
-    const t = this.tab, want = (q) => t === 'done' ? DONE.includes(q.status) : t === 'all' ? LIVE.includes(q.status) : q.status === t;
+    const t = this.tab, want = (q) => t === 'done' ? DONE.includes(q.status) : t === 'all' ? LIVE.includes(q.status) : q.status === t; /* tab picks filter */
     return quests().filter((q) => want(q) && !(t !== 'done' && this.hide[q.type]));
   }
 
   html() {
     const gm = game.user.isGM, accent = (t) => STATUS[t]?.color ?? '#ffaa00';
-    const tabs = TABS.map((t) => `<a class="qtab ${this.tab === t ? 'on' : ''}" data-act="tab" data-tab="${t}" style="${this.tab === t ? `color:${accent(t)};border-color:${accent(t)}` : ''}">${L(`Tab.${t}`)}</a>`).join(''); /* .tab and .active are Foundry's */
+    const tabs = TABS.map((t) => `<a class="qtab ${this.tab === t ? 'on' : ''}" data-act="tab" data-tab="${t}" style="${this.tab === t ? `color:${accent(t)};border-color:${accent(t)}` : ''}">${L(`Tab.${t}`)}</a>`).join(''); /* Foundry owns .tab, .active */
     const tools = gm ? btn('edit', '<i class="fas fa-feather-pointed"></i>', `class="ic ${this.edit ? 'on' : ''}" title="${L('Edit')}"`) : '';
     // const tools = gm ? btn('import', '<i class="fas fa-file-import"></i>', `class="ic" title="${L('Import')}"`) + btn('edit', '<i class="fas fa-feather-pointed"></i>', `class="ic ${this.edit ? 'on' : ''}" title="${L('Edit')}"`) : ''; /* legacy import, ran once 2026-09-11 */
-    const add = !this.edit ? '' : this.draft ? this.editor(this.draft, true) : btn('add', `<i class="fas fa-plus"></i> ${L('Add')}`, 'class="add"');
+    const add = !this.edit ? '' : this.draft ? this.editor(this.draft, true) : btn('add', `<i class="fas fa-plus"></i> ${L('Add')}`, 'class="add"'); /* add row or editor */
     const rows = this.visible().map((q) => this.editing === q.id ? this.editor(q) : this.card(q)).join('');
     const filters = ['objective', 'interlude'].map((t) => `<label><input type="checkbox" data-act="hide" data-type="${t}" ${this.hide[t] ? 'checked' : ''}> ${L(`Hide.${t}`)}</label>`).join('');
     return `<div class="head">${filters}<span class="tools">${tools}</span><span class="qhelp" data-tooltip="${esc(help())}">?</span></div>
@@ -56,7 +56,7 @@ export class QuestTrackerApp extends ApplicationV2 {
   /* In place editor; delete asks first. */
   editor(q, isNew = false) {
     const id = `data-id="${q.id}"`, types = TYPES.map((t) => `<option value="${t}" ${q.type === t ? 'selected' : ''}>${L(`Type.${t}`)}</option>`).join('');
-    const foot = this.ask?.id === q.id ? `<div class="ask">${L('DeleteAsk')} ${btn('remove', L('Delete'), `class="red" ${id}`)}${btn('cancel', L('Cancel'))}</div>`
+    const foot = this.ask?.id === q.id ? `<div class="ask">${L('DeleteAsk')} ${btn('remove', L('Delete'), `class="red" ${id}`)}${btn('cancel', L('Cancel'))}</div>` /* in: ask, out: footer */
       : `<div class="row">${btn('save', `<i class="fas fa-save"></i> ${L('Save')}`, `class="gold" ${id}`)}${btn('cancel', L('Cancel'))}${isNew ? '' : btn('trash', '<i class="fas fa-trash"></i>', `class="ic" ${id} title="${L('Delete')}"`)}</div>`;
     return `<div class="card edit" data-edit="${q.id}" style="border-left-color:${STATUS[q.status].color}">
       <input type="text" name="name" maxlength="60" placeholder="${L('Name')}" value="${esc(q.name)}">
@@ -67,38 +67,38 @@ export class QuestTrackerApp extends ApplicationV2 {
   bind(root) {
     on(root, 'change', '[data-act="hide"]', (el) => { this.hide[el.dataset.type] = el.checked; this.render(); });
     on(root, 'click', '[data-act]:not([data-act="hide"])', (el) => this.act(el.dataset.act, el.dataset));
-    root.addEventListener('keydown', (ev) => { const card = ev.target.closest('[data-edit]'); if (!card) return; if (ev.key === 'Enter' && ev.target.name === 'name') this.act('save', { id: card.dataset.edit }); if (ev.key === 'Escape') this.act('cancel', {}); });
+    root.addEventListener('keydown', (ev) => { const card = ev.target.closest('[data-edit]'); if (!card) return; if (ev.key === 'Enter' && ev.target.name === 'name') this.act('save', { id: card.dataset.edit }); if (ev.key === 'Escape') this.act('cancel', {}); }); /* in: key, out: save or cancel */
   }
 
   async act(act, ds) {
-    if (!game.user.isGM && act !== 'tab') return;
+    if (!game.user.isGM && act !== 'tab') return; /* in: act, out: players tab only */
     const map = {
       tab: () => { this.tab = ds.tab; this.ask = null; this.draft = null; },
       edit: () => { this.edit = !this.edit; this.editing = this.draft = this.ask = null; },
-      add: () => { this.draft = blank(this.tab === 'done' ? 'gold' : this.tab === 'all' ? 'green' : this.tab); this.editing = this.ask = null; },
+      add: () => { this.draft = blank(this.tab === 'done' ? 'gold' : this.tab === 'all' ? 'green' : this.tab); this.editing = this.ask = null; }, /* in: tab, out: draft status */
       pen: () => { this.editing = ds.id; this.draft = this.ask = null; },
       finish: () => { this.ask = { id: ds.id, kind: 'finish' }; },
       trash: () => { this.ask = { id: ds.id, kind: 'delete' }; },
-      cancel: () => { if (this.ask) this.ask = null; else this.editing = this.draft = null; },
+      cancel: () => { if (this.ask) this.ask = null; else this.editing = this.draft = null; }, /* in: ask or edit, out: cleared */
       status: () => this.setStatus(ds.id, ds.status),
       save: () => this.save(ds.id),
       remove: () => this.remove(ds.id),
       // import: () => this.import(), /* legacy import, button parked above */
     };
-    if (!map[act]) return;
+    if (!map[act]) return; /* in: act, out: unknown exits */
     await map[act]();
     this.render();
   }
 
-  async setStatus(id, status) { await mutate((l) => { const q = l.find((q) => q.id === id); if (q) q.status = status; }); this.ask = null; }
+  async setStatus(id, status) { await mutate((l) => { const q = l.find((q) => q.id === id); if (q) q.status = status; }); this.ask = null; } /* in: quest found, out: status set */
   async remove(id) { await mutate((l) => l.findSplice((q) => q.id === id)); this.editing = this.ask = null; }
 
   /* Card fields in; new quests on top. */
   async save(id) {
     const el = this.element.querySelector(`[data-edit="${id}"]`), val = (n) => el?.querySelector(`[name="${n}"]`)?.value ?? '';
     const fields = { name: val('name'), note: val('note'), type: val('type') };
-    if (!fields.name.trim()) return ui.notifications.warn(L('NeedName'));
-    await mutate((l) => { const q = l.find((q) => q.id === id); if (q) Object.assign(q, clean({ ...q, ...fields })); else if (this.draft?.id === id) l.unshift(clean({ ...this.draft, ...fields })); });
+    if (!fields.name.trim()) return ui.notifications.warn(L('NeedName')); /* in: name, out: blank warns */
+    await mutate((l) => { const q = l.find((q) => q.id === id); if (q) Object.assign(q, clean({ ...q, ...fields })); else if (this.draft?.id === id) l.unshift(clean({ ...this.draft, ...fields })); }); /* in: quest or draft, out: merged or added */
     this.editing = this.draft = this.ask = null;
   }
 
@@ -107,7 +107,7 @@ export class QuestTrackerApp extends ApplicationV2 {
     const r = await DialogV2.prompt({ window: { title: L('Import') }, rejectClose: false,
       content: `<p>${L('ImportHint')}</p><input type="text" name="uuid" placeholder="JournalEntry.xxxxxxxxxxxxxxxx" value="${esc(u)}"><input type="text" name="page" placeholder="${L('PageName')}" value="${esc(p)}">`,
       ok: { label: L('Import'), callback: (ev, b) => ({ uuid: b.form.elements.uuid.value.trim(), page: b.form.elements.page.value.trim() }) } });
-    if (!r?.uuid) return;
+    if (!r?.uuid) return; /* in: dialog, out: dismissed exits */
     await game.settings.set(MODULE_ID, 'legacy', `${r.uuid}|${r.page}`);
     try { ui.notifications.info(game.i18n.format('VQT.Imported', { n: await importJournal(r.uuid, r.page) })); }
     catch (e) { ui.notifications.error(e.message); }

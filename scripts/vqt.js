@@ -13,13 +13,13 @@ Hooks.once('init', () => {
   game.settings.register(MODULE_ID, 'gate', { name: 'VQT.Settings.Gate.Name', hint: 'VQT.Settings.Gate.Hint', scope: 'world', config: true, type: Boolean, default: true, onChange: () => ui.players.render() });
   game.settings.register(MODULE_ID, 'gateItem', { name: 'VQT.Settings.GateItem.Name', hint: 'VQT.Settings.GateItem.Hint', scope: 'world', config: true, type: String, default: 'Pocket Guide to Threshold', onChange: () => ui.players.render() });
   game.settings.register(MODULE_ID, 'autoOpen', { name: 'VQT.Settings.AutoOpen.Name', hint: 'VQT.Settings.AutoOpen.Hint', scope: 'client', config: true, type: Boolean, default: true });
-  game.keybindings.register(MODULE_ID, 'toggle', { name: 'VQT.Toggle', editable: [], onDown: () => { if (gated()) toggle(); return true; } });
+  game.keybindings.register(MODULE_ID, 'toggle', { name: 'VQT.Toggle', editable: [], onDown: () => { if (gated()) toggle(); return true; } }); /* in: key, out: toggle if gated */
 });
 
 /* Quest Log button atop the player list. */
 Hooks.on('renderPlayerList', (list, html) => {
   const el = html instanceof HTMLElement ? html : html[0]; /* v12 jQuery, v13 element */
-  if (el.querySelector('.vqt-open') || !gated()) return;
+  if (el.querySelector('.vqt-open') || !gated()) return; /* skips if present or ungated */
   const b = document.createElement('button');
   b.type = 'button'; b.className = 'vqt-open'; b.innerHTML = `<i class="fas fa-scroll"></i> ${L('Open')}`;
   b.addEventListener('click', toggle);
@@ -32,14 +32,14 @@ Hooks.on('createItem', (i) => mine(i) && ui.players.render());
 Hooks.on('deleteItem', (i) => mine(i) && ui.players.render());
 
 /* Setting change reaches every client; skip mid edit. */
-Hooks.on('updateSetting', (s) => { if (s.key === `${MODULE_ID}.quests` && app?.rendered && !app.editing && !app.draft) app.render(); });
+Hooks.on('updateSetting', (s) => { if (s.key === `${MODULE_ID}.quests` && app?.rendered && !app.editing && !app.draft) app.render(); }); /* in: setting, out: render if idle */
 
 /* Module API. */
 Hooks.once('ready', () => {
-  if (!game.user.isGM && game.settings.get(MODULE_ID, 'autoOpen') && gated()) open();
+  if (!game.user.isGM && game.settings.get(MODULE_ID, 'autoOpen') && gated()) open(); /* player, autoOpen, gated: window opens */
   game.modules.get(MODULE_ID).api = { open, close, toggle, quests, STATUS, importJournal,
     add: (q) => mutate((l) => l.unshift(clean({ ...blank(), ...q }))),
-    set: (id, patch) => mutate((l) => { const q = l.find((q) => q.id === id); if (q) Object.assign(q, clean({ ...q, ...patch })); }),
+    set: (id, patch) => mutate((l) => { const q = l.find((q) => q.id === id); if (q) Object.assign(q, clean({ ...q, ...patch })); }), /* in: found quest, out: patched */
     remove: (id) => mutate((l) => l.findSplice((q) => q.id === id)) };
   Hooks.callAll('vqt.ready', game.modules.get(MODULE_ID).api);
 });
